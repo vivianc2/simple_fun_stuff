@@ -8,12 +8,16 @@ function createEventFromRecentEmails() {
     var oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
     Logger.log('Processing emails received after: ' + oneHourAgo);
 
-    // Search for emails with the specific subject
-    var searchQuery = 'subject:"Your booking has been submitted"';
+    // Calculate the time 7 days ago
+    var sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    var formattedSevenDaysAgo = Utilities.formatDate(sevenDaysAgo, Session.getScriptTimeZone(), 'yyyy/MM/dd');
+
+    // Search for emails with the specific subject received in the last 7 days
+    var searchQuery = 'subject:"Your booking has been submitted" after:' + formattedSevenDaysAgo;
     var threads = GmailApp.search(searchQuery);
 
     if (threads.length == 0) {
-        Logger.log("No threads found with the specified subject.");
+        Logger.log("No threads found with the specified subject in the past 7 days.");
         return;
     }
 
